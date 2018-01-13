@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huanghongxi.chiguoguoservice.dao.ProductDao">
+    <resultMap id="AllColumnMap" type="com.huanghongxi.chiguoguoservice.entity.Product">
+        <result column="productId" property="productId"/>
+        <result column="productName" property="productName"/>
+        <result column="stock" property="stock"/>
+        <result column="price" property="price"/>
+        <result column="originalPrice" property="originalPrice"/>
+        <result column="info" property="info"/>
+        <result column="unit" property="unit"/>
+        <result column="status" property="status"/>
+        <result column="coverImgPath" property="coverImgPath"/>
+        <result column="productImgPath" property="productImgPath"/>
+        <result column="recImgPath" property="recImgPath"/>
+        <result column="launchedTime" property="launchedTime"/>
+        <result column="discontinuedTime" property="discontinuedTime"/>
+        <result column="sellOutTime" property="sellOutTime"/>
+        <result column="updateTime" property="updateTime"/>
+    </resultMap>
+
+    <sql id="all_column">
+        `productId`,
+        `productName`,
+        `stock`,
+        `price`,
+        `originalPrice`,
+        `info`,
+        `unit`,
+        `status`,
+        `recommendState`,
+        `coverImgPath`,
+        `productImgPath`,
+        `recImgPath`,
+        `launchedTime`,
+        `discontinuedTime`,
+        `sellOutTime`,
+        `updateTime`
+    </sql>
+
+    <select id="findProductsByCondition"
+            parameterType="com.huanghongxi.chiguoguoservice.entity.condition.ProductCondition" resultMap="AllColumnMap">
+        SELECT
+        <include refid="all_column"/>
+        FROM product
+        WHERE 1 = 1
+        <if test="condition.recommendState != null and condition.recommendState != ''">
+            AND recommendState = #{condition.recommendState}
+        </if>
+        <if test="condition.status != null and condition.status != ''">
+            AND status = #{condition.status}
+        </if>
+        ORDER BY updateTime DESC
+        <if test="condition.offset != null and condition.rows != null">
+            LIMIT #{condition.offset},#{condition.rows}
+        </if>
+    </select>
+
+    <select id="findProductById" parameterType="java.lang.String"
+            resultType="com.huanghongxi.chiguoguoservice.entity.Product">
+        SELECT
+        <include refid="all_column"/>
+        FROM product
+        WHERE productId = #{productId}
+    </select>
+
+    <insert id="addProduct" parameterType="com.huanghongxi.chiguoguoservice.entity.Product" useGeneratedKeys="true"
+            keyProperty="entity.productId">
+        INSERT INTO product (
+        <include refid="all_column"/>
+        ) VALUES (
+        #{entity.productId},
+        #{entity.productName},
+        #{entity.stock},
+        #{entity.price},
+        #{entity.originalPrice},
+        #{entity.info},
+        #{entity.unit},
+        #{entity.status},
+        #{entity.recommendState},
+        #{entity.coverImgPath},
+        #{entity.productImgPath},
+        #{entity.recImgPath},
+        #{entity.launchedTime},
+        #{entity.discontinuedTime},
+        #{entity.sellOutTime},
+        #{entity.updateTime}
+        )
+    </insert>
+
+    <update id="updateProduct" parameterType="com.huanghongxi.chiguoguoservice.entity.Product">
+        UPDATE product
+        <set>
+            <if test="entity.productName != null">productName = #{entity.productName},</if>
+            <if test="entity.stock != null">stock = #{entity.stock},</if>
+            <if test="entity.price != null">price = #{entity.price},</if>
+            <if test="entity.originalPrice != null">originalPrice = #{entity.originalPrice},</if>
+            <if test="entity.info != null">info = #{entity.info},</if>
+            <if test="entity.unit != null">unit = #{entity.unit},</if>
+            <if test="entity.status != null">status = #{entity.status},</if>
+            <if test="entity.recommendState != null">recommendState = #{entity.recommendState},</if>
+            <if test="entity.coverImgPath != null">coverImgPath = #{entity.coverImgPath},</if>
+            <if test="entity.productImgPath != null">productImgPath = #{entity.productImgPath},</if>
+            <if test="entity.recImgPath != null">recImgPath = #{entity.recImgPath},</if>
+            <if test="entity.launchedTime != null">launchedTime = #{entity.launchedTime},</if>
+            <if test="entity.discontinuedTime != null">discontinuedTime = #{entity.discontinuedTime},</if>
+            <if test="entity.sellOutTime != null">sellOutTime = #{entity.sellOutTime},</if>
+            <if test="entity.updateTime != null">updateTime = #{entity.updateTime}</if>
+        </set>
+        WHERE productId = #{entity.productId}
+    </update>
+
+    <delete id="deleteProduct" parameterType="java.lang.String">
+        DELETE FROM product
+        WHERE productId = #{productId}
+    </delete>
+
+</mapper>

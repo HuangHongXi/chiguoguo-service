@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: chiguoguo-service
+  profiles:
+    active: me
+encrypt:
+  failOnError: false

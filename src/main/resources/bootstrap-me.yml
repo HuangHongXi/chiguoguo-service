@@ -1,0 +1,10 @@
+spring:
+  cloud:
+    zookeeper:
+      enabled: true
+      connectString: 172.16.23.130:2181
+      config:
+        enabled: true
+        root: /configurations/microserver
+        defaultContext: commonconfig
+        profileSeparator: ','
