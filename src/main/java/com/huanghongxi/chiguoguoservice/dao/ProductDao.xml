@@ -44,11 +44,14 @@
         <include refid="all_column"/>
         FROM product
         WHERE 1 = 1
-        <if test="condition.recommendState != null and condition.recommendState != ''">
+        <if test="condition.recommendState != null">
             AND recommendState = #{condition.recommendState}
         </if>
-        <if test="condition.status != null and condition.status != ''">
+        <if test="condition.status != null">
             AND status = #{condition.status}
+        </if>
+        <if test="condition.queryKey != null and condition.queryKey != ''">
+            AND productName LIKE CONCAT(concat('%',#{condition.queryKey}),'%')
         </if>
         ORDER BY updateTime DESC
         <if test="condition.offset != null and condition.rows != null">

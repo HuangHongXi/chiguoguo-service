@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.huanghongxi.chiguoguoservice.dao.ShoppingCartDao">
+
+    <resultMap id="ProductMap" type="com.huanghongxi.chiguoguoservice.entity.Product">
+        <result column="productId" property="productId"/>
+        <result column="productName" property="productName"/>
+        <result column="stock" property="stock"/>
+        <result column="price" property="price"/>
+        <result column="originalPrice" property="originalPrice"/>
+        <result column="info" property="info"/>
+        <result column="unit" property="unit"/>
+        <result column="status" property="status"/>
+        <result column="coverImgPath" property="coverImgPath"/>
+        <result column="productImgPath" property="productImgPath"/>
+        <result column="recImgPath" property="recImgPath"/>
+        <result column="launchedTime" property="launchedTime"/>
+        <result column="discontinuedTime" property="discontinuedTime"/>
+        <result column="sellOutTime" property="sellOutTime"/>
+        <result column="updateTime" property="updateTime"/>
+    </resultMap>
+
+    <resultMap id="ShoppingCartMap" type="com.huanghongxi.chiguoguoservice.entity.ShoppingCart" extends="ProductMap">
+        <result column="userId" property="userId"/>
+        <result column="productId" property="productId"/>
+        <result column="productAmount" property="productAmount"/>
+    </resultMap>
+
+    <sql id="all_column">
+        `productId`,
+        `productName`,
+        `stock`,
+        `price`,
+        `originalPrice`,
+        `info`,
+        `unit`,
+        `status`,
+        `recommendState`,
+        `coverImgPath`,
+        `productImgPath`,
+        `recImgPath`,
+        `launchedTime`,
+        `discontinuedTime`,
+        `sellOutTime`,
+        `updateTime`,
+        `userId`,
+        `productAmount`
+    </sql>
+
+    <sql id="product_column">
+        `productId`,
+        `productName`,
+        `stock`,
+        `price`,
+        `originalPrice`,
+        `info`,
+        `unit`,
+        `status`,
+        `recommendState`,
+        `coverImgPath`,
+        `productImgPath`,
+        `recImgPath`,
+        `launchedTime`,
+        `discontinuedTime`,
+        `sellOutTime`,
+        `updateTime`
+    </sql>
+
+    <sql id="shoppingCart_column">
+        `userId`,
+        `productId`,
+        `productAmount`
+    </sql>
+
+    <select id="findShoppingCartByUserId" parameterType="java.lang.String" resultMap="ShoppingCartMap">
+        SELECT
+            s.productId,
+            productName,
+            stock,
+            price,
+            originalPrice,
+            info,
+            unit,
+            status,
+            recommendState,
+            coverImgPath,
+            productImgPath,
+            recImgPath,
+            launchedTime,
+            discontinuedTime,
+            sellOutTime,
+            updateTime,
+            userId,
+            productAmount
+        FROM product p, shoppingCart s
+        WHERE p.productId = s.productId AND s.userId = #{userId}
+    </select>
+
+    <select id="findShoppingCart" parameterType="com.huanghongxi.chiguoguoservice.entity.ShoppingCart"
+            resultType="com.huanghongxi.chiguoguoservice.entity.ShoppingCart">
+        SELECT
+        <include refid="shoppingCart_column"/>
+        FROM shoppingCart
+        WHERE productId = #{entity.productId}
+        AND userId = #{entity.userId}
+    </select>
+
+    <insert id="addProduct2ShoppingCart" parameterType="com.huanghongxi.chiguoguoservice.entity.ShoppingCart"
+            useGeneratedKeys="true"
+            keyProperty="entity.productId,entity.userId">
+        INSERT INTO shoppingCart (
+        <include refid="shoppingCart_column"/>
+        ) VALUES (
+        #{entity.userId},
+        #{entity.productId},
+        #{entity.productAmount}
+        )
+    </insert>
+
+    <insert id="insertList">
+        INSERT INTO shoppingCart(
+        <include refid="shoppingCart_column"/>
+        )VALUES
+        <foreach collection="entities" item="entity" index="index" separator=",">
+            (
+            #{entity.userId},
+            #{entity.productId},
+            #{entity.productAmount}
+            )
+        </foreach>
+    </insert>
+
+    <update id="updateShoppingCart" parameterType="com.huanghongxi.chiguoguoservice.entity.ShoppingCart">
+        UPDATE shoppingCart
+        <set>
+            productAmount = #{entity.productAmount}
+        </set>
+        WHERE userId = #{entity.userId}
+        AND productId = #{entity.productId}
+    </update>
+
+    <delete id="deleteShoppingCartsByUserId" parameterType="java.lang.String">
+        DELETE FROM shoppingCart
+        WHERE userId = #{userId}
+    </delete>
+
+</mapper>

@@ -5,8 +5,9 @@ import lombok.Data;
 @Data
 public class ProductCondition {
 
-    private String recommendState;  //推荐状态（0：普通商品，1：精选推荐）
-    private String status;          //状态(0:上架 1:下架 2:售完)
+    private Integer recommendState; //推荐状态（0：普通商品，1：精选推荐）
+    private Integer status;         //状态(0:上架 1:下架 2:售完)
+    private String queryKey;        //搜索关键字
     private Integer page;           /*页码*/
     private Integer rows;           /*条数*/
     private Integer offset;         /*偏移量*/

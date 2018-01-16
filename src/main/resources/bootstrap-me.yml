@@ -8,3 +8,8 @@ spring:
         root: /configurations/microserver
         defaultContext: commonconfig
         profileSeparator: ','
+logging:
+  level:
+    ROOT: info
+    com.huanghongxi: debug
+    com.netflix.discovery: error

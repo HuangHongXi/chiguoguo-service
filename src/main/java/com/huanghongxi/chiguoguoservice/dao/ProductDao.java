@@ -17,4 +17,5 @@ public interface ProductDao {
     int deleteProduct(@Param("productId") String productId);
 
     Product findProductById(@Param("productId") String productId);
+
 }
